@@ -63,6 +63,7 @@
 		<Textfield bind:value={city_name} label="Название города">
 <!--				<HelperText slot="helper">Введите название города</HelperText>-->
 		</Textfield>
+		<br><br>
 		<Button on:click={clicked} variant="raised" class="button-shaped-round">
 			<Label>Узнать погоду</Label>
 		</Button>
@@ -116,28 +117,28 @@
 	main {
 		text-align: center;
 		padding: 1em;
-		max-width: 240px;
+		max-width: 640px;
 		margin: 0 auto;
 	}
 
 	h1 {
 		color: #ff3e00;
 		text-transform: uppercase;
-		font-size: 4em;
+		font-size: 2em;
 		font-weight: 100;
 	}
 
 	h2 {
 		color: #001bff;
 		text-transform: uppercase;
-		font-size: 3em;
+		font-size: 1.5em;
 		font-weight: 100;
 	}
 
 	h3 {
 		color: #28e3e3;
 		text-transform: uppercase;
-		font-size: 2em;
+		font-size: 1em;
 		font-weight: 100;
 	}
 
@@ -149,5 +150,31 @@
 		main {
 			max-width: none;
 		}
+
+		h1 {
+			color: #ff3e00;
+			text-transform: uppercase;
+			font-size: 4em;
+			font-weight: 100;
+		}
+
+		h2 {
+			color: #001bff;
+			text-transform: uppercase;
+			font-size: 3em;
+			font-weight: 100;
+		}
+
+		h3 {
+			color: #28e3e3;
+			text-transform: uppercase;
+			font-size: 2em;
+			font-weight: 100;
+		}
+
+		.status {
+			text-align: center;
+		}
+
 	}
 </style>
