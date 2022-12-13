@@ -38,8 +38,6 @@
 	let button_clicked_accu = false;
 	async function clicked_openweather() {
 		button_clicked_openweather = true;
-		let button_clicked_accu = false;
-		let button_clicked_redis = false;
 		let response = await fetch(open_weather_url + new URLSearchParams({
 			'name': city_name
 		}))
@@ -57,17 +55,17 @@
 			alert('Непредвиденная ошибка')
 		}
 	}
+	let hourly1 = [];
+	let daily1 = [];
 	async function clicked_accu() {
-		let button_clicked_redis = false;
-		let button_clicked_openweather = false;
 		button_clicked_accu = true;
 		let response = await fetch(accu_weather_url + new URLSearchParams({
 			'name': city_name
 		}))
 		if(response.ok) {
 			let weather_data = await response.json()
-			hourly = weather_data.hourly;
-			daily = weather_data.daily;
+			hourly1 = weather_data.hourly;
+			daily1 = weather_data.daily;
 		}
 		else if (response.status === 404){
 			alert('Город не найден')
@@ -79,9 +77,7 @@
 	let accu = [];
 	let open = [];
 	async function clicked_redis() {
-		let button_clicked_openweather = false;
-		let button_clicked_accu = false;
-		button_clicked_accu = true;
+		button_clicked_redis = true;
 		let response = await fetch(cache_url)
 		if(response.ok) {
 			let cache_data = await response.json()
@@ -92,7 +88,6 @@
 			alert('Непредвиденная ошибка')
 		}
 	}
-
 </script>
 
 
@@ -155,7 +150,6 @@
 					</Panel>
 				</Accordion>
 			</div>
-
 		{/if}
 		{#if button_clicked_accu}
 			<h2 class="status">Погода в городе {city_name}</h2>
@@ -165,7 +159,7 @@
 						<Header><h3>Почасовой прогноз погоды</h3></Header>
 						<Content>
 							<div class="card-display">
-								{#each hourly as {dt, temp, weather}}
+								{#each hourly1 as {dt, temp, weather}}
 									<div class="card-container">
 										<Card variant="outlined" padded>
 											<p>Время: {dt}</p>
@@ -181,7 +175,7 @@
 						<Header><h3>Прогноз погоды по дням</h3></Header>
 						<Content>
 							<div class="card-display">
-								{#each daily as {dt, temp_day, temp_night, weather}}
+								{#each daily1 as {dt, temp_day, temp_night, weather}}
 									<div class="card-container">
 										<Card variant="outlined" padded>
 											<p>Время: {dt}</p>
