@@ -37,7 +37,6 @@
 	let button_clicked_openweather = false;
 	let button_clicked_accu = false;
 	async function clicked_openweather() {
-		button_clicked_openweather = true;
 		let response = await fetch(open_weather_url + new URLSearchParams({
 			'name': city_name
 		}))
@@ -47,18 +46,20 @@
 			current_temp = Math.round(weather_data.temperature * 100) / 100;
 			hourly = weather_data.hourly;
 			daily = weather_data.daily;
+			button_clicked_openweather = true;
 		}
 		else if (response.status === 404){
 			alert('Город не найден')
+			button_clicked_openweather = false;
 		}
 		else {
 			alert('Непредвиденная ошибка')
+			button_clicked_openweather = false;
 		}
 	}
 	let hourly1 = [];
 	let daily1 = [];
 	async function clicked_accu() {
-		button_clicked_accu = true;
 		let response = await fetch(accu_weather_url + new URLSearchParams({
 			'name': city_name
 		}))
@@ -66,26 +67,30 @@
 			let weather_data = await response.json()
 			hourly1 = weather_data.hourly;
 			daily1 = weather_data.daily;
+			button_clicked_accu = true;
 		}
 		else if (response.status === 404){
 			alert('Город не найден')
+			button_clicked_accu = false;
 		}
 		else {
 			alert('Непредвиденная ошибка')
+			button_clicked_accu = false;
 		}
 	}
 	let accu = [];
 	let open = [];
 	async function clicked_redis() {
-		button_clicked_redis = true;
 		let response = await fetch(cache_url)
 		if(response.ok) {
 			let cache_data = await response.json()
 			accu = cache_data.accu_keys;
 			open = cache_data.openweather_keys;
+			button_clicked_redis = true;
 		}
 		else {
 			alert('Непредвиденная ошибка')
+			button_clicked_redis = false;
 		}
 	}
 </script>
