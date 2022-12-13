@@ -1,0 +1,17 @@
+version: '3.3'
+
+services:
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - '80:80'
+  redis:
+    image: redis:5-alpine
+    ports:
+      - "6379:6379"

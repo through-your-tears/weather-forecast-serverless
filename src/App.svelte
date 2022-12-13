@@ -20,7 +20,9 @@
 </svelte:head>
 
 <script>
-	export let url;
+	export let open_weather_url;
+	export let accu_weather_url;
+	export let cache_url
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
 	import Button, { Label } from '@smui/button';
@@ -31,10 +33,14 @@
 	let daily = [];
 	let current_time = '';
 	let current_temp = '';
-	let button_clicked = false;
-	async function clicked() {
-		button_clicked = true;
-		let response = await fetch(url + new URLSearchParams({
+	let button_clicked_redis = false;
+	let button_clicked_openweather = false;
+	let button_clicked_accu = false;
+	async function clicked_openweather() {
+		button_clicked_openweather = true;
+		let button_clicked_accu = false;
+		let button_clicked_redis = false;
+		let response = await fetch(open_weather_url + new URLSearchParams({
 			'name': city_name
 		}))
 		if(response.ok) {
@@ -46,6 +52,41 @@
 		}
 		else if (response.status === 404){
 			alert('Город не найден')
+		}
+		else {
+			alert('Непредвиденная ошибка')
+		}
+	}
+	async function clicked_accu() {
+		let button_clicked_redis = false;
+		let button_clicked_openweather = false;
+		button_clicked_accu = true;
+		let response = await fetch(accu_weather_url + new URLSearchParams({
+			'name': city_name
+		}))
+		if(response.ok) {
+			let weather_data = await response.json()
+			hourly = weather_data.hourly;
+			daily = weather_data.daily;
+		}
+		else if (response.status === 404){
+			alert('Город не найден')
+		}
+		else {
+			alert('Непредвиденная ошибка')
+		}
+	}
+	let accu = [];
+	let open = [];
+	async function clicked_redis() {
+		let button_clicked_openweather = false;
+		let button_clicked_accu = false;
+		button_clicked_accu = true;
+		let response = await fetch(cache_url)
+		if(response.ok) {
+			let cache_data = await response.json()
+			accu = cache_data.accu_keys;
+			open = cache_data.openweather_keys;
 		}
 		else {
 			alert('Непредвиденная ошибка')
@@ -64,10 +105,16 @@
 <!--				<HelperText slot="helper">Введите название города</HelperText>-->
 		</Textfield>
 		<br><br>
-		<Button on:click={clicked} variant="raised" class="button-shaped-round">
-			<Label>Узнать погоду</Label>
+		<Button on:click={clicked_openweather} variant="raised" class="button-shaped-round">
+			<Label>Узнать погоду(OpenWeatherAPI)</Label>
 		</Button>
-		{#if button_clicked}
+		<Button on:click={clicked_accu} variant="raised" class="button-shaped-round">
+			<Label>Узнать погоду(AccuWeather)</Label>
+		</Button>
+		<Button on:click={clicked_redis} variant="raised" class="button-shaped-round">
+			<Label>Узнать погоду(AccuWeather)</Label>
+		</Button>
+		{#if button_clicked_openweather}
 			<h2 class="status">Погода в городе {city_name}</h2>
 			<p>Время в городе  {current_time}</p>
 			<p>Температура сейчас  {current_temp}°C</p>
@@ -109,6 +156,64 @@
 				</Accordion>
 			</div>
 
+		{/if}
+		{#if button_clicked_accu}
+			<h2 class="status">Погода в городе {city_name}</h2>
+			<div class="accordion-container">
+				<Accordion multiple>
+					<Panel>
+						<Header><h3>Почасовой прогноз погоды</h3></Header>
+						<Content>
+							<div class="card-display">
+								{#each hourly as {dt, temp, weather}}
+									<div class="card-container">
+										<Card variant="outlined" padded>
+											<p>Время: {dt}</p>
+											<p>Температура: {Math.round(temp * 100) / 100}°C</p>
+											<p>Погода: {weather}</p>
+										</Card>
+									</div>
+								{/each}
+							</div>
+						</Content>
+					</Panel>
+					<Panel>
+						<Header><h3>Прогноз погоды по дням</h3></Header>
+						<Content>
+							<div class="card-display">
+								{#each daily as {dt, temp_day, temp_night, weather}}
+									<div class="card-container">
+										<Card variant="outlined" padded>
+											<p>Время: {dt}</p>
+											<p>Температура днём: {Math.round(temp_day * 100) / 100}°C</p>
+											<p>Температура ночью: {Math.round(temp_night * 100) / 100}°C</p>
+											<p>Погода: {weather}</p>
+										</Card>
+									</div>
+								{/each}
+							</div>
+						</Content>
+					</Panel>
+				</Accordion>
+			</div>
+		{/if}
+		{#if button_clicked_redis}
+			<h2>Кешировано в AccuWeather</h2>
+			<ol>
+				{#each accu as a}
+					<li>
+						{a}
+					</li>
+				{/each}
+			</ol>
+			<h2>Кешировано в OpenWeatherAPI</h2>
+			<ol>
+				{#each open as a}
+					<li>
+						{a}
+					</li>
+				{/each}
+			</ol>
 		{/if}
 	</div>
 </main>
