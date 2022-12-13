@@ -107,7 +107,7 @@
 			<Label>Узнать погоду(AccuWeather)</Label>
 		</Button>
 		<Button on:click={clicked_redis} variant="raised" class="button-shaped-round">
-			<Label>Узнать погоду(AccuWeather)</Label>
+			<Label>Посмотреть кэш</Label>
 		</Button>
 		{#if button_clicked_openweather}
 			<h2 class="status">Погода в городе {city_name}</h2>
