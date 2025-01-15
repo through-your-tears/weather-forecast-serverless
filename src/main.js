@@ -3,9 +3,9 @@ import App from './App.svelte';
 const app = new App({
 	target: document.body,
 	props: {
-		open_weather_url: 'https://functions.yandexcloud.net/d4egumqsb4olg4vandga?',
-		accu_weather_url: 'https://functions.yandexcloud.net/d4eiq0cc52fgiofr51b4?',
-		cache_url: 'https://functions.yandexcloud.net/d4eqpap5v5a5hn3puesn?'
+		open_weather_url: 'https://functions.yandexcloud.net/d4e56ndpfn2i6b48m7c2',
+		accu_weather_url: 'https://functions.yandexcloud.net/d4e0j0ohqbqmattnn312',
+		cache_url: 'https://functions.yandexcloud.net/d4encdck6aphnkb3gatm'
 	}
 });
 
